@@ -5,6 +5,14 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.0.2] - 2024-01-15
+
+### Alterado
+- Convertido projeto para plugin WordPress
+- CSS e JavaScript incorporados inline para compatibilidade total
+- Adicionado shortcode [envelope_contribuicao] para uso em páginas
+- Estrutura otimizada para instalação via painel WordPress
+
 ## [1.0.0] - 2024-01-15
 
 ### Adicionado

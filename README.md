@@ -1,6 +1,6 @@
 # Envelope de Contribuição
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)
 
 Calculadora digital para contribuições da Igreja Batista Vida só em Jesus.
 
@@ -31,7 +31,16 @@ Calculadora digital para contribuições da Igreja Batista Vida só em Jesus.
 
 ## Instalação
 
+### Versão Standalone
 Baixe o arquivo `envelope_contribuicao.html` e abra no navegador.
+
+### Plugin WordPress
+1. Compacte a pasta `wordpress-plugin` em ZIP
+2. No WordPress: Plugins → Adicionar novo → Enviar plugin
+3. Faça upload do ZIP e ative
+4. Use o shortcode `[envelope_contribuicao]` em qualquer página
+
+Veja [COMO_PUBLICAR.md](COMO_PUBLICAR.md) para instruções detalhadas.
 
 ## Versionamento
 
