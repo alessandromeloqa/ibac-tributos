@@ -5,6 +5,14 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.0.6] - 2024-01-15
+
+### Alterado
+- Adicionada responsividade para dispositivos móveis
+- Layout otimizado para tablets (até 768px)
+- Layout otimizado para celulares (até 480px)
+- Botões empilhados verticalmente em telas pequenas
+
 ## [1.0.5] - 2024-01-15
 
 ### Alterado

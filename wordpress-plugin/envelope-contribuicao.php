@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Envelope de Contribuição
  * Description: Calculadora digital para contribuições da Igreja Batista Vida só em Jesus
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author: Igreja Batista Vida só em Jesus
  */
 
@@ -42,6 +42,26 @@ function envelope_contribuicao_shortcode() {
         .btn-whatsapp { background-color: #25d366; color: white; }
         .btn-whatsapp:hover { background-color: #1da851; }
         .btn-acao:active { transform: scale(0.98); }
+        @media (max-width: 768px) {
+            .header-igreja { flex-direction: column; text-align: center; padding: 15px; }
+            .logo-placeholder { margin-right: 0; margin-bottom: 10px; }
+            .header-igreja h1 { font-size: 1.2em; }
+            .corpo-calculadora { padding: 15px; }
+            .campo-grupo { margin-bottom: 15px; }
+            .campo-grupo label { font-size: 0.85em; }
+            .campo-grupo label .versiculos { font-size: 0.75em; }
+            .campo-total { padding: 15px; }
+            .campo-total label { font-size: 0.95em; }
+            .campo-total .valor-total { font-size: 2em; }
+            .acoes-container { flex-direction: column; gap: 8px; }
+            .btn-acao { width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .header-igreja h1 { font-size: 1em; }
+            .campo-grupo input[type="number"], .campo-grupo input[type="text"] { font-size: 1em; padding: 10px; }
+            .input-com-simbolo input { padding-left: 40px !important; }
+            .campo-total .valor-total { font-size: 1.8em; }
+        }
     </style>
     <div class="container-envelope">
         <header class="header-igreja">

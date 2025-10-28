@@ -228,6 +228,71 @@
         .btn-acao:active {
             transform: scale(0.98);
         }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container-envelope {
+                border-radius: 8px;
+            }
+            .header-igreja {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+            .logo-placeholder {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            .header-igreja h1 {
+                font-size: 1.2em;
+            }
+            .corpo-calculadora {
+                padding: 15px;
+            }
+            .campo-grupo {
+                margin-bottom: 15px;
+            }
+            .campo-grupo label {
+                font-size: 0.85em;
+            }
+            .campo-grupo label .versiculos {
+                font-size: 0.75em;
+            }
+            .campo-total {
+                padding: 15px;
+            }
+            .campo-total label {
+                font-size: 0.95em;
+            }
+            .campo-total .valor-total {
+                font-size: 2em;
+            }
+            .acoes-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .btn-acao {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-igreja h1 {
+                font-size: 1em;
+            }
+            .campo-grupo input[type="number"], .campo-grupo input[type="text"] {
+                font-size: 1em;
+                padding: 10px;
+            }
+            .input-com-simbolo input {
+                padding-left: 40px !important;
+            }
+            .campo-total .valor-total {
+                font-size: 1.8em;
+            }
+        }
     </style>
 </head>
 <body>
