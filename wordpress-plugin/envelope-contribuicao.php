@@ -2,13 +2,14 @@
 /**
  * Plugin Name: Envelope de Contribuição
  * Description: Calculadora digital para contribuições da Igreja Batista Vida só em Jesus
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Igreja Batista Vida só em Jesus
  */
 
 if (!defined('ABSPATH')) exit;
 
 function envelope_contribuicao_shortcode() {
+    wp_enqueue_script('jspdf', 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', array(), '2.5.1', true);
     ob_start();
     ?>
     <style>
@@ -31,6 +32,16 @@ function envelope_contribuicao_shortcode() {
         .campo-total { background-color: #f4f7f6; padding: 20px; border-radius: 8px; text-align: center; }
         .campo-total label { font-size: 1.1em; font-weight: 700; color: #38b6ff; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
         .campo-total .valor-total { font-size: 2.5em; font-weight: 700; color: #333; margin: 10px 0 0 0; }
+        .btn-limpar { width: 100%; padding: 12px; background-color: #ff6b6b; color: white; border: none; border-radius: 6px; font-size: 1em; font-weight: 600; cursor: pointer; transition: background-color 0.2s; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px; }
+        .btn-limpar:hover { background-color: #ff5252; }
+        .btn-limpar:active { transform: scale(0.98); }
+        .acoes-container { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-acao { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 0.95em; font-weight: 600; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-pdf { background-color: #e74c3c; color: white; }
+        .btn-pdf:hover { background-color: #c0392b; }
+        .btn-whatsapp { background-color: #25d366; color: white; }
+        .btn-whatsapp:hover { background-color: #1da851; }
+        .btn-acao:active { transform: scale(0.98); }
     </style>
     <div class="container-envelope">
         <header class="header-igreja">
@@ -41,7 +52,7 @@ function envelope_contribuicao_shortcode() {
             <div class="campo-grupo">
                 <label for="salario">Remuneração Mensal</label>
                 <div class="input-com-simbolo">
-                    <input type="text" id="salario" class="calculadora-input" placeholder="Digite aqui sua remuneração" aria-describedby="salario-desc">
+                    <input type="text" id="salario" class="calculadora-input" placeholder="Digite aqui sua remuneração">
                 </div>
             </div>
             <div class="campo-total">
@@ -50,40 +61,45 @@ function envelope_contribuicao_shortcode() {
             </div>
             <hr>
             <div class="campo-grupo">
-                <label for="primicias">Primícias (1/30)<span class="versiculos" id="primicias-desc">Pv 3.9; Ez 44.30; Ml 3.10; Mt 23.23</span></label>
+                <label for="primicias">Primícias (1/30)<span class="versiculos">Pv 3.9; Ez 44.30; Ml 3.10; Mt 23.23</span></label>
                 <div class="input-com-simbolo">
-                    <input type="number" id="primicias" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="primicias-desc">
+                    <input type="number" id="primicias" placeholder="0.00" min="0" step="0.01">
                 </div>
             </div>
             <div class="campo-grupo">
-                <label for="dizimo">Dízimo (10%)<span class="versiculos" id="dizimo-desc">Gn 14.18-20; Lv 27.30-32; Ml 3.10-12</span></label>
+                <label for="dizimo">Dízimo (10%)<span class="versiculos">Gn 14.18-20; Lv 27.30-32; Ml 3.10-12</span></label>
                 <div class="input-com-simbolo">
-                    <input type="number" id="dizimo" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="dizimo-desc">
+                    <input type="number" id="dizimo" placeholder="0.00" min="0" step="0.01">
                 </div>
             </div>
             <div class="campo-grupo">
-                <label for="socorro">Oferta Minist. de Socorro (2%)<span class="versiculos" id="socorro-desc">Pv 22.9; Is 58.7-10; 1 Jo 3.17-18</span></label>
+                <label for="socorro">Oferta Minist. de Socorro (2%)<span class="versiculos">Pv 22.9; Is 58.7-10; 1 Jo 3.17-18</span></label>
                 <div class="input-com-simbolo">
-                    <input type="number" id="socorro" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="socorro-desc">
+                    <input type="number" id="socorro" placeholder="0.00" min="0" step="0.01">
                 </div>
             </div>
             <div class="campo-grupo">
-                <label for="gratidao">Oferta Gratidão (Voluntário c/ Propósito)<span class="versiculos" id="gratidao-desc">Êx 35.5; 1 Cr 29.9; 2 Co 9.7</span></label>
+                <label for="gratidao">Oferta Gratidão (Voluntário c/ Propósito)<span class="versiculos">Êx 35.5; 1 Cr 29.9; 2 Co 9.7</span></label>
                 <div class="input-com-simbolo">
-                    <input type="number" id="gratidao" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="gratidao-desc">
+                    <input type="number" id="gratidao" placeholder="0.00" min="0" step="0.01">
                 </div>
             </div>
             <div class="campo-grupo">
-                <label for="semeadura">Semeadura<span class="versiculos" id="semeadura-desc">2 Co 9.6-11; Gl 6.7-9</span></label>
+                <label for="semeadura">Semeadura<span class="versiculos">2 Co 9.6-11; Gl 6.7-9</span></label>
                 <div class="input-com-simbolo">
-                    <input type="number" id="semeadura" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="semeadura-desc">
+                    <input type="number" id="semeadura" placeholder="0.00" min="0" step="0.01">
                 </div>
             </div>
             <div class="campo-grupo">
-                <label for="israel">Oferta para Israel<span class="versiculos" id="israel-desc">Sl 122.6; Jo 4.22-23; Rm 11.16-18</span></label>
+                <label for="israel">Oferta para Israel<span class="versiculos">Sl 122.6; Jo 4.22-23; Rm 11.16-18</span></label>
                 <div class="input-com-simbolo">
-                    <input type="number" id="israel" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="israel-desc">
+                    <input type="number" id="israel" placeholder="0.00" min="0" step="0.01">
                 </div>
+            </div>
+            <button class="btn-limpar" id="btnLimpar">Limpar</button>
+            <div class="acoes-container">
+                <button class="btn-acao btn-pdf" id="btnPDF">📄 Gerar PDF</button>
+                <button class="btn-acao btn-whatsapp" id="btnWhatsApp">📱 Compartilhar</button>
             </div>
         </main>
     </div>
@@ -142,6 +158,86 @@ function envelope_contribuicao_shortcode() {
                     const element = document.getElementById(id);
                     if (element) element.addEventListener('input', calcularTotal);
                 });
+                const btnLimpar = document.getElementById('btnLimpar');
+                if (btnLimpar) {
+                    btnLimpar.addEventListener('click', function() {
+                        document.getElementById('salario').value = '';
+                        ['primicias', 'dizimo', 'socorro', 'gratidao', 'semeadura', 'israel'].forEach(id => {
+                            document.getElementById(id).value = '';
+                        });
+                        document.getElementById('total').textContent = 'R$ 0,00';
+                    });
+                }
+                const btnPDF = document.getElementById('btnPDF');
+                if (btnPDF) {
+                    btnPDF.addEventListener('click', function() {
+                        if (typeof window.jspdf === 'undefined') {
+                            alert('Aguarde o carregamento da biblioteca PDF...');
+                            return;
+                        }
+                        const { jsPDF } = window.jspdf;
+                        const doc = new jsPDF();
+                        const salario = document.getElementById('salario').value || '0';
+                        const primicias = document.getElementById('primicias').value || '0.00';
+                        const dizimo = document.getElementById('dizimo').value || '0.00';
+                        const socorro = document.getElementById('socorro').value || '0.00';
+                        const gratidao = document.getElementById('gratidao').value || '0.00';
+                        const semeadura = document.getElementById('semeadura').value || '0.00';
+                        const israel = document.getElementById('israel').value || '0.00';
+                        const total = document.getElementById('total').textContent;
+                        doc.setFontSize(18);
+                        doc.text('ENVELOPE DE CONTRIBUICAO', 105, 20, { align: 'center' });
+                        doc.setFontSize(12);
+                        doc.text('Igreja Batista Vida so em Jesus', 105, 30, { align: 'center' });
+                        doc.setLineWidth(0.5);
+                        doc.line(20, 35, 190, 35);
+                        doc.setFontSize(11);
+                        doc.text('Remuneracao Mensal: R$ ' + salario, 20, 45);
+                        doc.setFontSize(14);
+                        doc.setFont(undefined, 'bold');
+                        doc.text(total, 105, 55, { align: 'center' });
+                        doc.setFont(undefined, 'normal');
+                        doc.line(20, 60, 190, 60);
+                        doc.setFontSize(12);
+                        doc.setFont(undefined, 'bold');
+                        doc.text('DETALHAMENTO:', 20, 70);
+                        doc.setFont(undefined, 'normal');
+                        doc.setFontSize(11);
+                        let y = 80;
+                        doc.text('Primicias (1/30): R$ ' + primicias, 20, y);
+                        y += 10;
+                        doc.text('Dizimo (10%): R$ ' + dizimo, 20, y);
+                        y += 10;
+                        doc.text('Oferta Socorro (2%): R$ ' + socorro, 20, y);
+                        y += 10;
+                        doc.text('Oferta Gratidao: R$ ' + gratidao, 20, y);
+                        y += 10;
+                        doc.text('Semeadura: R$ ' + semeadura, 20, y);
+                        y += 10;
+                        doc.text('Oferta Israel: R$ ' + israel, 20, y);
+                        doc.line(20, y + 5, 190, y + 5);
+                        doc.save('envelope-contribuicao.pdf');
+                    });
+                }
+                const btnWhatsApp = document.getElementById('btnWhatsApp');
+                if (btnWhatsApp) {
+                    btnWhatsApp.addEventListener('click', function() {
+                        const salario = document.getElementById('salario').value || '0';
+                        const total = document.getElementById('total').textContent;
+                        const primicias = document.getElementById('primicias').value || '0.00';
+                        const dizimo = document.getElementById('dizimo').value || '0.00';
+                        const socorro = document.getElementById('socorro').value || '0.00';
+                        const gratidao = document.getElementById('gratidao').value || '0.00';
+                        const semeadura = document.getElementById('semeadura').value || '0.00';
+                        const israel = document.getElementById('israel').value || '0.00';
+                        const mensagem = `*ENVELOPE DE CONTRIBUICAO*%0AIgreja Batista Vida so em Jesus%0A%0A================================%0A%0ARemuneracao: R$ ${salario}%0A%0A*${total}*%0A%0A================================%0A%0A*Detalhamento:*%0A%0APrimicias: R$ ${primicias}%0ADizimo: R$ ${dizimo}%0ASocorro: R$ ${socorro}%0AGratidao: R$ ${gratidao}%0ASemeadura: R$ ${semeadura}%0AIsrael: R$ ${israel}`;
+                        if (navigator.share) {
+                            navigator.share({ title: 'Envelope de Contribuicao', text: mensagem.replace(/%0A/g, '\n').replace(/\*/g, '') }).catch(() => { window.open(`https://wa.me/?text=${mensagem}`, '_blank'); });
+                        } else {
+                            window.open(`https://wa.me/?text=${mensagem}`, '_blank');
+                        }
+                    });
+                }
                 calcula();
             }, 100);
         })();

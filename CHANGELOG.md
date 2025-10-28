@@ -5,6 +5,14 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.0.4] - 2024-01-15
+
+### Adicionado
+- Botão "Limpar" para zerar todos os campos
+- Botão "Gerar PDF" para exportar envelope em PDF
+- Botão "Compartilhar" para enviar via WhatsApp ou outros apps
+- Biblioteca jsPDF para geração de PDF profissional
+
 ## [1.0.3] - 2024-01-15
 
 ### Alterado

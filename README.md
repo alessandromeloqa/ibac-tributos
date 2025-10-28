@@ -1,6 +1,6 @@
 # Envelope de Contribuição
 
-![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.4-blue.svg)
 
 Calculadora digital para contribuições da Igreja Batista Vida só em Jesus.
 
