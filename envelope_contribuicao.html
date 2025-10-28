@@ -417,20 +417,22 @@
             doc.setFontSize(11);
             doc.text('Remuneracao Mensal: R$ ' + salario, 20, 45);
             
-            doc.setFontSize(14);
+            doc.setFontSize(11);
             doc.setFont(undefined, 'bold');
-            doc.text(total, 105, 55, { align: 'center' });
+            doc.text('TOTAL DA CONTRIBUICAO:', 105, 58, { align: 'center' });
+            doc.setFontSize(16);
+            doc.text(total, 105, 68, { align: 'center' });
             doc.setFont(undefined, 'normal');
             
-            doc.line(20, 60, 190, 60);
+            doc.line(20, 75, 190, 75);
             
             doc.setFontSize(12);
             doc.setFont(undefined, 'bold');
-            doc.text('DETALHAMENTO:', 20, 70);
+            doc.text('DETALHAMENTO:', 20, 85);
             doc.setFont(undefined, 'normal');
             
             doc.setFontSize(11);
-            let y = 80;
+            let y = 95;
             doc.text('Primicias (1/30): R$ ' + primicias, 20, y);
             y += 10;
             doc.text('Dizimo (10%): R$ ' + dizimo, 20, y);
@@ -449,26 +451,69 @@
         }
 
         function compartilhar() {
+            if (typeof window.jspdf === 'undefined') {
+                alert('Aguarde o carregamento da biblioteca PDF...');
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
             const salario = document.getElementById('salario').value || '0';
-            const total = document.getElementById('total').textContent;
             const primicias = document.getElementById('primicias').value || '0.00';
             const dizimo = document.getElementById('dizimo').value || '0.00';
             const socorro = document.getElementById('socorro').value || '0.00';
             const gratidao = document.getElementById('gratidao').value || '0.00';
             const semeadura = document.getElementById('semeadura').value || '0.00';
             const israel = document.getElementById('israel').value || '0.00';
+            const total = document.getElementById('total').textContent;
 
-            const mensagem = `*ENVELOPE DE CONTRIBUIÇÃO*%0AIgreja Batista Vida só em Jesus%0A%0A━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A%0ARemuneração: R$ ${salario}%0A%0A*${total}*%0A%0A━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A%0A*Detalhamento:*%0A%0APrimícias: R$ ${primicias}%0ADízimo: R$ ${dizimo}%0ASocorro: R$ ${socorro}%0AGratidão: R$ ${gratidao}%0ASemeadura: R$ ${semeadura}%0AIsrael: R$ ${israel}`;
+            doc.setFontSize(18);
+            doc.text('ENVELOPE DE CONTRIBUICAO', 105, 20, { align: 'center' });
+            doc.setFontSize(12);
+            doc.text('Igreja Batista Vida so em Jesus', 105, 30, { align: 'center' });
+            doc.setLineWidth(0.5);
+            doc.line(20, 35, 190, 35);
+            doc.setFontSize(11);
+            doc.text('Remuneracao Mensal: R$ ' + salario, 20, 45);
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'bold');
+            doc.text('TOTAL DA CONTRIBUICAO:', 105, 58, { align: 'center' });
+            doc.setFontSize(16);
+            doc.text(total, 105, 68, { align: 'center' });
+            doc.setFont(undefined, 'normal');
+            doc.line(20, 75, 190, 75);
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('DETALHAMENTO:', 20, 85);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(11);
+            let y = 95;
+            doc.text('Primicias (1/30): R$ ' + primicias, 20, y);
+            y += 10;
+            doc.text('Dizimo (10%): R$ ' + dizimo, 20, y);
+            y += 10;
+            doc.text('Oferta Socorro (2%): R$ ' + socorro, 20, y);
+            y += 10;
+            doc.text('Oferta Gratidao: R$ ' + gratidao, 20, y);
+            y += 10;
+            doc.text('Semeadura: R$ ' + semeadura, 20, y);
+            y += 10;
+            doc.text('Oferta Israel: R$ ' + israel, 20, y);
+            doc.line(20, y + 5, 190, y + 5);
 
-            if (navigator.share) {
+            const pdfBlob = doc.output('blob');
+            const pdfFile = new File([pdfBlob], 'envelope-contribuicao.pdf', { type: 'application/pdf' });
+
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
                 navigator.share({
-                    title: 'Envelope de Contribuição',
-                    text: mensagem.replace(/%0A/g, '\n').replace(/\*/g, '')
+                    title: 'Envelope de Contribuicao',
+                    text: 'Envelope de Contribuicao - Igreja Batista Vida so em Jesus',
+                    files: [pdfFile]
                 }).catch(() => {
-                    window.open(`https://wa.me/?text=${mensagem}`, '_blank');
+                    doc.save('envelope-contribuicao.pdf');
                 });
             } else {
-                window.open(`https://wa.me/?text=${mensagem}`, '_blank');
+                doc.save('envelope-contribuicao.pdf');
             }
         }
 
