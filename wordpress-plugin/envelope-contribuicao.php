@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Envelope de Contribuição
  * Description: Calculadora digital para contribuições da Igreja Batista Vida só em Jesus
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Igreja Batista Vida só em Jesus
  */
 
@@ -34,7 +34,7 @@ function envelope_contribuicao_shortcode() {
     </style>
     <div class="container-envelope">
         <header class="header-igreja">
-            <div class="logo-placeholder">Sua Logo</div>
+            <div class="logo-placeholder" style="background-image: url('http://ibacvsj.com.br/wp-content/uploads/2023/03/Logo_Internet.png');"></div>
             <h1>Igreja Batista Vida só em Jesus</h1>
         </header>
         <main class="corpo-calculadora">
@@ -44,21 +44,25 @@ function envelope_contribuicao_shortcode() {
                     <input type="text" id="salario" class="calculadora-input" placeholder="Digite aqui sua remuneração" aria-describedby="salario-desc">
                 </div>
             </div>
+            <div class="campo-total">
+                <label for="total">Total da Contribuição</label>
+                <p class="valor-total" id="total">R$ 0,00</p>
+            </div>
             <hr>
             <div class="campo-grupo">
-                <label for="primicias">Primícias<span class="versiculos" id="primicias-desc">Pv 3.9; Ez 44.30; Ml 3.10; Mt 23.23</span></label>
+                <label for="primicias">Primícias (1/30)<span class="versiculos" id="primicias-desc">Pv 3.9; Ez 44.30; Ml 3.10; Mt 23.23</span></label>
                 <div class="input-com-simbolo">
                     <input type="number" id="primicias" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="primicias-desc">
                 </div>
             </div>
             <div class="campo-grupo">
-                <label for="dizimo">Dízimo<span class="versiculos" id="dizimo-desc">Gn 14.18-20; Lv 27.30-32; Ml 3.10-12</span></label>
+                <label for="dizimo">Dízimo (10%)<span class="versiculos" id="dizimo-desc">Gn 14.18-20; Lv 27.30-32; Ml 3.10-12</span></label>
                 <div class="input-com-simbolo">
                     <input type="number" id="dizimo" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="dizimo-desc">
                 </div>
             </div>
             <div class="campo-grupo">
-                <label for="socorro">Oferta Minist. de Socorro<span class="versiculos" id="socorro-desc">Pv 22.9; Is 58.7-10; 1 Jo 3.17-18</span></label>
+                <label for="socorro">Oferta Minist. de Socorro (2%)<span class="versiculos" id="socorro-desc">Pv 22.9; Is 58.7-10; 1 Jo 3.17-18</span></label>
                 <div class="input-com-simbolo">
                     <input type="number" id="socorro" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="socorro-desc">
                 </div>
@@ -80,10 +84,6 @@ function envelope_contribuicao_shortcode() {
                 <div class="input-com-simbolo">
                     <input type="number" id="israel" class="calculadora-input campo-contribuicao" placeholder="0.00" min="0" step="0.01" aria-describedby="israel-desc">
                 </div>
-            </div>
-            <div class="campo-total">
-                <label for="total">Total da Contribuição</label>
-                <p class="valor-total" id="total">R$ 0,00</p>
             </div>
         </main>
     </div>
