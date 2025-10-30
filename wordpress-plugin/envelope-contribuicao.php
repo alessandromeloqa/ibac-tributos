@@ -237,6 +237,159 @@ function envelope_contribuicao_shortcode() {
                 calcula();
             }, 100);
         })();
+
+        (function() {
+            function obterValorNumerico(valor) {
+                if (!valor) return 0;
+                return parseFloat(valor.toString().replace(/\./g, '').replace(',', '.')) || 0;
+            }
+
+            function enviarDados(dados) {
+                fetch('/wp-json/ibac/v1/log', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(dados)
+                }).catch(function() {});
+            }
+
+            setTimeout(function() {
+                enviarDados({action: 'PAGE_VIEW', value: 0});
+            }, 1000);
+
+            setTimeout(function() {
+                var salarioInput = document.getElementById('salario');
+                if (salarioInput) {
+                    salarioInput.addEventListener('blur', function() {
+                        if (this.value) {
+                            var valor = obterValorNumerico(this.value);
+                            if (valor > 0) {
+                                enviarDados({
+                                    action: 'SALARIO_DIGITADO',
+                                    value: valor
+                                });
+                            }
+                        }
+                    });
+                }
+            }, 1000);
+
+            var calculaOriginal = window.calcula;
+            window.calcula = function() {
+                if (calculaOriginal) calculaOriginal();
+                
+                setTimeout(function() {
+                    var salario = obterValorNumerico(document.getElementById('salario')?.value);
+                    var primicias = obterValorNumerico(document.getElementById('primicias')?.value);
+                    var dizimo = obterValorNumerico(document.getElementById('dizimo')?.value);
+                    var socorro = obterValorNumerico(document.getElementById('socorro')?.value);
+                    var gratidao = obterValorNumerico(document.getElementById('gratidao')?.value);
+                    var semeadura = obterValorNumerico(document.getElementById('semeadura')?.value);
+                    var israel = obterValorNumerico(document.getElementById('israel')?.value);
+                    var total = obterValorNumerico(document.getElementById('total')?.textContent);
+
+                    if (salario > 0) {
+                        enviarDados({
+                            action: 'CALCULO_COMPLETO',
+                            value: total,
+                            details: JSON.stringify({
+                                salario: salario,
+                                primicias: primicias,
+                                dizimo: dizimo,
+                                socorro: socorro,
+                                gratidao: gratidao,
+                                semeadura: semeadura,
+                                israel: israel,
+                                total: total
+                            })
+                        });
+                    }
+                }, 500);
+            };
+
+            setTimeout(function() {
+                var campos = ['primicias', 'dizimo', 'socorro', 'gratidao', 'semeadura', 'israel'];
+                
+                campos.forEach(function(campoId) {
+                    var campo = document.getElementById(campoId);
+                    if (campo) {
+                        campo.addEventListener('change', function() {
+                            var valor = obterValorNumerico(this.value);
+                            if (valor > 0) {
+                                enviarDados({
+                                    action: 'CAMPO_EDITADO',
+                                    value: valor,
+                                    details: JSON.stringify({campo: campoId, valor: valor})
+                                });
+                            }
+                        });
+                    }
+                });
+            }, 1500);
+
+            setTimeout(function() {
+                var totalElement = document.getElementById('total');
+                if (totalElement) {
+                    var observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                                var total = obterValorNumerico(totalElement.textContent);
+                                if (total > 0) {
+                                    enviarDados({
+                                        action: 'TOTAL_ATUALIZADO',
+                                        value: total
+                                    });
+                                }
+                            }
+                        });
+                    });
+                    
+                    observer.observe(totalElement, {
+                        childList: true,
+                        characterData: true,
+                        subtree: true
+                    });
+                }
+            }, 2000);
+
+            setTimeout(function() {
+                var btnLimpar = document.getElementById('btnLimpar');
+                if (btnLimpar) {
+                    btnLimpar.addEventListener('click', function() {
+                        enviarDados({
+                            action: 'FORMULARIO_LIMPO',
+                            value: 0
+                        });
+                    });
+                }
+            }, 1500);
+
+            setTimeout(function() {
+                var btnPDF = document.getElementById('btnPDF');
+                if (btnPDF) {
+                    btnPDF.addEventListener('click', function() {
+                        var total = obterValorNumerico(document.getElementById('total')?.textContent);
+                        enviarDados({
+                            action: 'PDF_GERADO',
+                            value: total
+                        });
+                    });
+                }
+            }, 1500);
+
+            setTimeout(function() {
+                var btnWhatsApp = document.getElementById('btnWhatsApp');
+                if (btnWhatsApp) {
+                    btnWhatsApp.addEventListener('click', function() {
+                        var total = obterValorNumerico(document.getElementById('total')?.textContent);
+                        enviarDados({
+                            action: 'WHATSAPP_COMPARTILHADO',
+                            value: total
+                        });
+                    });
+                }
+            }, 1500);
+
+        })();
     </script>
     <?php
     return ob_get_clean();
