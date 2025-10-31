@@ -124,6 +124,13 @@ function envelope_contribuicao_shortcode() {
                 const semeadura = document.getElementById('semeadura').value || '0.00';
                 const israel = document.getElementById('israel').value || '0.00';
                 const total = document.getElementById('total').textContent;
+                const logoUrl = 'http://ibacvsj.com.br/wp-content/uploads/2023/03/Logo_Internet.png';
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.src = logoUrl;
+                try {
+                    doc.addImage(img, 'PNG', 15, 10, 25, 25);
+                } catch(e) {}
                 doc.setFontSize(18);
                 doc.text('ENVELOPE DE CONTRIBUICAO', 105, 20, { align: 'center' });
                 doc.setFontSize(12);
