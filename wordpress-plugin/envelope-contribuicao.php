@@ -80,7 +80,7 @@ function envelope_contribuicao_shortcode() {
             <div class="campo-grupo">
                 <label for="salario" id="label-remuneracao">Remuneração Mensal</label>
                 <div class="input-com-simbolo">
-                    <input type="text" id="salario" placeholder="Digite aqui sua remuneração">
+                    <input type="text" id="salario" inputmode="numeric" pattern="[0-9]*" placeholder="Digite aqui sua remuneração">
                 </div>
             </div>
             <div class="campo-total">
