@@ -32,6 +32,11 @@ function envelope_contribuicao_shortcode() {
         .campo-total { background-color: #f4f7f6; padding: 20px; border-radius: 8px; text-align: center; }
         .campo-total label { font-size: 1.1em; font-weight: 700; color: #38b6ff; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
         .campo-total .valor-total { font-size: 2.5em; font-weight: 700; color: #333; margin: 10px 0 0 0; }
+        .btn-pix { width: 100%; padding: 10px; background-color: #00a884; color: white; border: none; border-radius: 6px; font-size: 0.9em; font-weight: 600; cursor: pointer; margin-top: 15px; transition: background-color 0.2s; }
+        .btn-pix:hover { background-color: #008c6f; }
+        .btn-pix:active { transform: scale(0.98); }
+        .pix-mensagem { background-color: #4caf50; color: white; padding: 10px; border-radius: 6px; text-align: center; font-weight: 600; margin-bottom: 10px; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .btn-limpar { width: 100%; padding: 12px; background-color: #ff6b6b; color: white; border: none; border-radius: 6px; font-size: 1em; font-weight: 600; cursor: pointer; transition: background-color 0.2s; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px; }
         .btn-limpar:hover { background-color: #ff5252; }
         .btn-limpar:active { transform: scale(0.98); }
@@ -53,6 +58,7 @@ function envelope_contribuicao_shortcode() {
             .campo-total { padding: 15px; }
             .campo-total label { font-size: 0.95em; }
             .campo-total .valor-total { font-size: 2em; }
+            .btn-pix { font-size: 0.85em; padding: 8px; }
             .acoes-container { flex-direction: column; gap: 8px; }
             .btn-acao { width: 100%; }
         }
@@ -80,6 +86,7 @@ function envelope_contribuicao_shortcode() {
             <div class="campo-total">
                 <label for="total" id="label-total">Total da Contribuição</label>
                 <p class="valor-total" id="total">R$ 0,00</p>
+                <button class="btn-pix" id="btnPix">📋 Copiar Chave Pix</button>
             </div>
             <hr>
             <div class="campo-grupo">
@@ -240,6 +247,41 @@ function envelope_contribuicao_shortcode() {
                             navigator.share({ title: 'Envelope de Contribuicao', files: [pdfFile] }).catch(() => doc.save('envelope-contribuicao.pdf'));
                         } else {
                             doc.save('envelope-contribuicao.pdf');
+                        }
+                    });
+                }
+                const btnPix = document.getElementById('btnPix');
+                if (btnPix) {
+                    btnPix.addEventListener('click', function() {
+                        const chavePix = '05752842000113';
+                        const campoTotal = document.querySelector('.campo-total');
+                        
+                        const input = document.createElement('input');
+                        input.value = chavePix;
+                        document.body.appendChild(input);
+                        input.select();
+                        input.setSelectionRange(0, 99999);
+                        
+                        try {
+                            document.execCommand('copy');
+                            document.body.removeChild(input);
+                            
+                            let mensagem = document.getElementById('pixMensagem');
+                            if (!mensagem) {
+                                mensagem = document.createElement('div');
+                                mensagem.id = 'pixMensagem';
+                                mensagem.className = 'pix-mensagem';
+                                campoTotal.insertBefore(mensagem, btnPix);
+                            }
+                            mensagem.textContent = '✓ Pix CNPJ copiado com sucesso!';
+                            mensagem.style.display = 'block';
+                            
+                            setTimeout(function() {
+                                mensagem.style.display = 'none';
+                            }, 5000);
+                        } catch (err) {
+                            document.body.removeChild(input);
+                            alert('Chave Pix (CNPJ): 05752842000113');
                         }
                     });
                 }

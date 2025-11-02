@@ -65,49 +65,51 @@ function envelope_contribuicao_shortcode() {
     </style>
     <div class="container-envelope">
         <header class="header-igreja">
-            <div class="logo-placeholder" style="background-image: url('http://ibacvsj.com.br/wp-content/uploads/2023/03/Logo_Internet.png');"></div>
-            <h1>Igreja Batista Vida só em Jesus</h1>
+            <div class="logo-placeholder" style="background-image: url('http://ibacvsj.com.br/wp-content/uploads/2023/03/Logo_Internet.png');">
+                <img id="logo-img" src="http://ibacvsj.com.br/wp-content/uploads/2023/03/Logo_Internet.png" alt="Logo" style="display:none;">
+            </div>
+            <h1 id="titulo-principal">Igreja Batista Vida só em Jesus</h1>
         </header>
         <main class="corpo-calculadora">
             <div class="campo-grupo">
-                <label for="salario">Remuneração Mensal</label>
+                <label for="salario" id="label-remuneracao">Remuneração Mensal</label>
                 <div class="input-com-simbolo">
                     <input type="text" id="salario" placeholder="Digite aqui sua remuneração">
                 </div>
             </div>
             <div class="campo-total">
-                <label for="total">Total da Contribuição</label>
+                <label for="total" id="label-total">Total da Contribuição</label>
                 <p class="valor-total" id="total">R$ 0,00</p>
             </div>
             <hr>
             <div class="campo-grupo">
-                <label for="primicias">Primícias (1/30)<span class="versiculos">Pv 3.9; Ez 44.30; Ml 3.10; Mt 23.23</span></label>
+                <label for="primicias" id="label-primicias">Primícias (1/30)<span class="versiculos" id="ref-primicias">Pv 3.9; Ez 44.30; Ml 3.10; Mt 23.23</span></label>
                 <div class="input-com-simbolo"><input type="number" id="primicias" placeholder="0.00" min="0" step="0.01"></div>
             </div>
             <div class="campo-grupo">
-                <label for="dizimo">Dízimo (10%)<span class="versiculos">Gn 14.18-20; Lv 27.30-32; Ml 3.10-12</span></label>
+                <label for="dizimo" id="label-dizimo">Dízimo (10%)<span class="versiculos" id="ref-dizimo">Gn 14.18-20; Lv 27.30-32; Ml 3.10-12</span></label>
                 <div class="input-com-simbolo"><input type="number" id="dizimo" placeholder="0.00" min="0" step="0.01"></div>
             </div>
             <div class="campo-grupo">
-                <label for="socorro">Oferta Minist. de Socorro (2%)<span class="versiculos">Pv 22.9; Is 58.7-10; 1 Jo 3.17-18</span></label>
+                <label for="socorro" id="label-socorro">Oferta Minist. de Socorro (2%)<span class="versiculos" id="ref-socorro">Pv 22.9; Is 58.7-10; 1 Jo 3.17-18</span></label>
                 <div class="input-com-simbolo"><input type="number" id="socorro" placeholder="0.00" min="0" step="0.01"></div>
             </div>
             <div class="campo-grupo">
-                <label for="gratidao">Oferta Gratidão (Voluntário c/ Propósito)<span class="versiculos">Êx 35.5; 1 Cr 29.9; 2 Co 9.7</span></label>
+                <label for="gratidao" id="label-gratidao">Oferta Gratidão (Voluntário c/ Propósito)<span class="versiculos" id="ref-gratidao">Êx 35.5; 1 Cr 29.9; 2 Co 9.7</span></label>
                 <div class="input-com-simbolo"><input type="number" id="gratidao" placeholder="0.00" min="0" step="0.01"></div>
             </div>
             <div class="campo-grupo">
-                <label for="semeadura">Semeadura<span class="versiculos">2 Co 9.6-11; Gl 6.7-9</span></label>
+                <label for="semeadura" id="label-semeadura">Semeadura<span class="versiculos" id="ref-semeadura">2 Co 9.6-11; Gl 6.7-9</span></label>
                 <div class="input-com-simbolo"><input type="number" id="semeadura" placeholder="0.00" min="0" step="0.01"></div>
             </div>
             <div class="campo-grupo">
-                <label for="israel">Oferta para Israel<span class="versiculos">Sl 122.6; Jo 4.22-23; Rm 11.16-18</span></label>
+                <label for="israel" id="label-israel">Oferta para Israel<span class="versiculos" id="ref-israel">Sl 122.6; Jo 4.22-23; Rm 11.16-18</span></label>
                 <div class="input-com-simbolo"><input type="number" id="israel" placeholder="0.00" min="0" step="0.01"></div>
             </div>
-            <button class="btn-limpar" id="btnLimpar">Limpar</button>
+            <button class="btn-limpar" id="btnLimpar" data-text-id="btn-limpar">Limpar</button>
             <div class="acoes-container">
-                <button class="btn-acao btn-pdf" id="btnPDF">📄 Gerar PDF</button>
-                <button class="btn-acao btn-whatsapp" id="btnWhatsApp">📱 Compartilhar</button>
+                <button class="btn-acao btn-pdf" id="btnPDF" data-text-id="btn-pdf">📄 Gerar PDF</button>
+                <button class="btn-acao btn-whatsapp" id="btnWhatsApp" data-text-id="btn-share">📱 Compartilhar</button>
             </div>
         </main>
     </div>
@@ -271,7 +273,7 @@ function envelope_contribuicao_shortcode() {
                             var valor = obterValorNumerico(this.value);
                             if (valor > 0) {
                                 enviarDados({
-                                    action: 'SALARIO_DIGITADO',
+                                    action: 'CONSULT',
                                     value: valor
                                 });
                             }
@@ -397,6 +399,76 @@ function envelope_contribuicao_shortcode() {
             }, 1500);
 
         })();
+    </script>
+
+    <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // 1. Define a função para buscar e preencher os dados
+        async function loadEnvelopeContent() {
+            try {
+                // Esta é a API que o seu plugin 'gestao-ibac-tributos.php' criou
+                const response = await fetch('/wp-json/ibac/v1/content');
+                if (!response.ok) {
+                    throw new Error('Não foi possível carregar os dados.');
+                }
+                
+                const data = await response.json();
+                
+                // 2. Mapeia os dados da API para os IDs do HTML
+                // (Usamos 'data.key' para cada campo)
+                const map = {
+                    '#logo-img': { attr: 'src', key: data.logo },
+                    '#titulo-principal': { text: data.site_title },
+                    '#label-remuneracao': { text: data.label_remuneracao },
+                    '#label-total': { text: data.label_total },
+                    
+                    '#label-primicias': { text: data.primicias_label },
+                    '#ref-primicias': { text: data.ref_primicias },
+                    
+                    '#label-dizimo': { text: data.dizimo_label },
+                    '#ref-dizimo': { text: data.ref_dizimo },
+                    
+                    '#label-socorro': { text: data.socorro_label },
+                    '#ref-socorro': { text: data.ref_socorro },
+                    
+                    '#label-gratidao': { text: data.gratidao_label },
+                    '#ref-gratidao': { text: data.ref_gratidao },
+                    
+                    '#label-semeadura': { text: data.semeadura_label },
+                    '#ref-semeadura': { text: data.ref_semeadura },
+                    
+                    '#label-israel': { text: data.israel_label },
+                    '#ref-israel': { text: data.ref_israel },
+                    
+                    '[data-text-id="btn-limpar"]': { text: data.label_btn_limpar },
+                    '[data-text-id="btn-pdf"]': { text: data.label_btn_pdf },
+                    '[data-text-id="btn-share"]': { text: data.label_btn_share },
+                };
+                
+                // 3. Preenche o HTML
+                for (const selector in map) {
+                    const el = document.querySelector(selector);
+                    const config = map[selector];
+                    if (el) {
+                        // Verifica se o valor da API não está vazio antes de substituir
+                        if (config.text && config.text.trim() !== '') {
+                            el.textContent = config.text;
+                        }
+                        if (config.attr && config.key && config.key.trim() !== '') {
+                            el.setAttribute(config.attr, config.key);
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar conteúdo dinâmico:', error);
+            }
+        }
+        
+        // 4. Inicia o carregamento
+        loadEnvelopeContent();
+    });
     </script>
     <?php
     return ob_get_clean();

@@ -164,6 +164,44 @@
             margin: 10px 0 0 0;
         }
 
+        .btn-pix {
+            width: 100%;
+            padding: 10px;
+            background-color: #00a884;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-pix:hover {
+            background-color: #008c6f;
+        }
+
+        .btn-pix:active {
+            transform: scale(0.98);
+        }
+
+        .pix-mensagem {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 10px;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .btn-limpar {
             width: 100%;
             padding: 12px;
@@ -269,6 +307,10 @@
             .campo-total .valor-total {
                 font-size: 2em;
             }
+            .btn-pix {
+                font-size: 0.85em;
+                padding: 8px;
+            }
             .acoes-container {
                 flex-direction: column;
                 gap: 8px;
@@ -316,6 +358,7 @@
             <div class="campo-total">
                 <label for="total">Total da Contribuição</label>
                 <p class="valor-total" id="total">R$ 0,00</p>
+                <button class="btn-pix" id="btnPix">📋 Copiar Chave Pix</button>
             </div>
 
             <hr>
@@ -609,6 +652,39 @@
         document.getElementById('btnLimpar').addEventListener('click', limparCampos);
         document.getElementById('btnPDF').addEventListener('click', gerarPDF);
         document.getElementById('btnWhatsApp').addEventListener('click', compartilhar);
+        
+        document.getElementById('btnPix').addEventListener('click', function() {
+            const chavePix = '05752842000113';
+            const campoTotal = document.querySelector('.campo-total');
+            
+            const input = document.createElement('input');
+            input.value = chavePix;
+            document.body.appendChild(input);
+            input.select();
+            input.setSelectionRange(0, 99999);
+            
+            try {
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                
+                let mensagem = document.getElementById('pixMensagem');
+                if (!mensagem) {
+                    mensagem = document.createElement('div');
+                    mensagem.id = 'pixMensagem';
+                    mensagem.className = 'pix-mensagem';
+                    campoTotal.insertBefore(mensagem, document.getElementById('btnPix'));
+                }
+                mensagem.textContent = '✓ Pix CNPJ copiado com sucesso!';
+                mensagem.style.display = 'block';
+                
+                setTimeout(function() {
+                    mensagem.style.display = 'none';
+                }, 5000);
+            } catch (err) {
+                document.body.removeChild(input);
+                alert('Chave Pix (CNPJ): 05752842000113');
+            }
+        });
 
         calcula();
     </script>
